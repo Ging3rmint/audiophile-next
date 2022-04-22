@@ -4,11 +4,12 @@ import Header from "@/components/organisms/Header";
 import Footer from "@/components//organisms/Footer";
 
 interface PropTypes {
-  title: string;
-  description: string;
-  keywords: string;
+  title?: string;
+  description?: string;
+  keywords?: string;
   children?: React.ReactNode;
   pathName?: string;
+  dark?: boolean;
 }
 
 const BaseLayout: React.FC<PropTypes> = ({
@@ -17,8 +18,8 @@ const BaseLayout: React.FC<PropTypes> = ({
   keywords,
   children,
   pathName,
+  dark,
 }) => {
-  console.log(pathName);
   return (
     <div>
       <Head>
@@ -37,7 +38,7 @@ const BaseLayout: React.FC<PropTypes> = ({
           rel='stylesheet'
         />
       </Head>
-      <Header pathName={pathName} />
+      <Header pathName={pathName} darkMode={dark} />
       {children}
       <Footer />
     </div>

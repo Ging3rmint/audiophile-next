@@ -37,24 +37,24 @@ const StyledWrapper = styled.div`
 const StepButton: React.FC<PropTypes> = ({ initialValue = 1, onChange }) => {
   const [value, setValue] = useState(initialValue);
 
-  useEffect(() => {
-    if (onChange) {
-      onChange(value);
-    }
-  }, [value]);
-
   const onIncrease = () => {
     setValue(value + 1);
+    if (onChange) {
+      onChange(value + 1);
+    }
   };
 
   const onDecrease = () => {
     if (value > 1) {
       setValue(value - 1);
+      if (onChange) {
+        onChange(value - 1);
+      }
     }
   };
 
   return (
-    <StyledWrapper>
+    <StyledWrapper className='step-button'>
       <button onClick={onDecrease}>-</button>
       <span>{value}</span>
       <button onClick={onIncrease}>+</button>

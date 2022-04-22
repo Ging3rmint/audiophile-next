@@ -15,10 +15,10 @@ interface PropTypes {
   isNew?: boolean;
   title: string;
   description: string;
-  href: string;
+  href?: string;
   direction?: string;
   cost?: number;
-  addToCart?: (id: string, qty: number) => void;
+  addToCart?: (qty: number) => void;
   style?: {
     [propName: string]: any;
   };
@@ -64,6 +64,7 @@ const StyledWrapper = styled.section`
       line-height: 44px;
       letter-spacing: 1.5;
       margin-bottom: 32px;
+      text-transform: uppercase;
     }
 
     p {
@@ -92,7 +93,6 @@ const StyledWrapper = styled.section`
 `;
 
 const ProductCTA: React.FC<PropTypes> = ({
-  id,
   image,
   imageHeight,
   imageWidth,
@@ -111,12 +111,17 @@ const ProductCTA: React.FC<PropTypes> = ({
 
   const onQuantityChange = (qty: number) => {
     quantity.current = qty;
-    console.log(quantity.current);
+  };
+
+  const handleLinkClick = () => {
+    if (href) {
+      router.push(href);
+    }
   };
 
   const handleAddToCart = () => {
-    if (addToCart && id) {
-      addToCart(id, quantity.current);
+    if (addToCart) {
+      addToCart(quantity.current);
     }
   };
 
@@ -147,7 +152,7 @@ const ProductCTA: React.FC<PropTypes> = ({
             </div>
           </>
         ) : (
-          <Button text='SEE PRODUCT' onClick={() => router.push(href)} />
+          <Button text='SEE PRODUCT' onClick={handleLinkClick} />
         )}
       </div>
     </StyledWrapper>
