@@ -168,7 +168,7 @@ const Footer: React.FC<PropTypes> = ({ pathName }) => {
             Audiophile is an all in one stop to fulfill your audio needs. We're
             a small team of music lovers and sound specialists who are devoted
             to helping you get the most out of personal audio. Come and visit
-            our demo facility - we're open 7 days a week.
+            our demo facility - we&apos;re open 7 days a week.
           </p>
           <div className='middle__social-media'>
             <Link href='/'>
