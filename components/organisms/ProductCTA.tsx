@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { colors } from "@/constants/colors";
 import Image from "next/image";
 import { useRouter } from "next/router";
+
 import styled from "styled-components";
 import Button from "../atoms/Button";
 import StepButton from "../atoms/StepButton";

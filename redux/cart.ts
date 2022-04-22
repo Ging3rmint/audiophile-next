@@ -28,6 +28,35 @@ export const cartSlice = createSlice({
     clearCart: (state) => {
       state.cartItems = [];
     },
+    addCartItem: (
+      state,
+      action: PayloadAction<{
+        quantity: number;
+        name: string;
+        category: string;
+        slug: string;
+        price: number;
+        image: string;
+        tag: string;
+      }>
+    ) => {
+      const newCartItems = [...state.cartItems];
+
+      if (!newCartItems.length) {
+        state.cartItems = [action.payload];
+      } else {
+        const targetItemIndex = newCartItems.findIndex(
+          (item) => item.slug === action.payload.slug
+        );
+        if (targetItemIndex < 0) {
+          newCartItems.push(action.payload);
+          state.cartItems = newCartItems;
+        } else {
+          newCartItems[targetItemIndex].quantity += action.payload.quantity;
+          state.cartItems = newCartItems;
+        }
+      }
+    },
     removeCartItem: (state, action: PayloadAction<string>) => {
       const newCartItems = [...state.cartItems].filter(
         (item) => item.slug !== action.payload
@@ -68,7 +97,8 @@ export const cartSlice = createSlice({
   },
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
-export const { updateCart, clearCart, removeCartItem } = cartSlice.actions;
+export const { updateCart, clearCart, removeCartItem, addCartItem } =
+  cartSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
 export const selectCartItems = (state: RootState) => state.cart.cartItems;

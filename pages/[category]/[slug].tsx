@@ -7,8 +7,8 @@ import Link from "next/link";
 import axios from "axios";
 import styled from "styled-components";
 import { colors } from "@/constants/colors";
-import { useAppDispatch, useAppSelector } from "hooks";
-import { updateCart } from "redux/cart";
+import { useAppDispatch } from "hooks";
+import { addCartItem } from "redux/cart";
 
 import BaseLayout from "layouts/BaseLayout";
 
@@ -94,7 +94,7 @@ const ProductDetailPage: NextPage = ({
     } = data;
 
     dispatch(
-      updateCart({
+      addCartItem({
         name,
         image: mobile,
         slug,

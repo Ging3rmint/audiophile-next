@@ -4,6 +4,10 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import Icon from "../atoms/Icon";
 
+interface PropTypes {
+  pathName?: string;
+}
+
 const StyledFooter = styled.footer`
   background-color: ${colors.black};
   padding: 71px 0 58px;
@@ -107,7 +111,7 @@ const StyledFooter = styled.footer`
   }
 `;
 
-const Footer: React.FC = () => {
+const Footer: React.FC<PropTypes> = ({ pathName }) => {
   const router = useRouter();
 
   return (
@@ -126,13 +130,34 @@ const Footer: React.FC = () => {
               <li className={router.pathname === "/" ? "active" : ""}>
                 <Link href='/'>HOME</Link>
               </li>
-              <li className={router.pathname === "/headphones" ? "active" : ""}>
+              <li
+                className={
+                  router.pathname === "/headphones" ||
+                  (pathName && pathName?.includes("/headphones"))
+                    ? "active"
+                    : ""
+                }
+              >
                 <Link href='/headphones'>HEADPHONES</Link>
               </li>
-              <li className={router.pathname === "/speakers" ? "active" : ""}>
+              <li
+                className={
+                  router.pathname === "/speakers" ||
+                  (pathName && pathName?.includes("/speakers"))
+                    ? "active"
+                    : ""
+                }
+              >
                 <Link href='/speakers'>SPEAKERS</Link>
               </li>
-              <li className={router.pathname === "/earphones" ? "active" : ""}>
+              <li
+                className={
+                  router.pathname === "/earphones" ||
+                  (pathName && pathName?.includes("/earphones"))
+                    ? "active"
+                    : ""
+                }
+              >
                 <Link href='/earphones'>EARPHONES</Link>
               </li>
             </ul>

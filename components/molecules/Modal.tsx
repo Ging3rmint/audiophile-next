@@ -15,6 +15,7 @@ const StyledModal = styled.div`
   opacity: 0;
   z-index: -1;
   height: 0;
+  overflow: hidden;
 
   &.show {
     opacity: 1;

@@ -152,8 +152,46 @@ const StyledModalContent = styled.div`
   }
 
   .middle {
+    padding: 0 16px;
     min-height: 100px;
+    max-height: 400px;
+    overflow-y: auto;
     margin-bottom: 32px;
+    margin-top: 32px;
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-button {
+      width: 0px;
+      height: 0px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #e1e1e1;
+      border: 0px none #ffffff;
+      border-radius: 50px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ffffff;
+    }
+    ::-webkit-scrollbar-thumb:active {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-track {
+      background: #666666;
+      border: 0px none #ffffff;
+      border-radius: 50px;
+    }
+    ::-webkit-scrollbar-track:hover {
+      background: #666666;
+    }
+    ::-webkit-scrollbar-track:active {
+      background: #333333;
+    }
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
   }
 
   .bottom {
@@ -184,6 +222,7 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [totalCost, setTotalCost] = useState(0);
+  const [totalCartItem, setTotalCartItem] = useState(0);
   const cartItems = useAppSelector(selectCartItems);
 
   useEffect(() => {
@@ -193,7 +232,12 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
       return accumulator + item.quantity * item.price;
     }, initialValue);
 
+    const total = cartItems.reduce((accumulator, item) => {
+      return accumulator + item.quantity;
+    }, initialValue);
+
     setTotalCost(sum);
+    setTotalCartItem(total);
   }, [cartItems]);
 
   const onCartClick = () => {
@@ -257,8 +301,8 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
           </ul>
         </nav>
         <div className='cart'>
-          {cartItems.length ? (
-            <span className='qty-cart'>{cartItems.length}</span>
+          {totalCartItem ? (
+            <span className='qty-cart'>{totalCartItem}</span>
           ) : (
             ""
           )}
@@ -269,7 +313,7 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
           <Modal show={showCart} onClick={() => setShowCart(false)}>
             <StyledModalContent>
               <div className='top'>
-                <span>CART {`(${cartItems.length})`}</span>
+                <span>CART {`(${totalCartItem})`}</span>
                 <button onClick={onClearCart}>Remove all</button>
               </div>
               <ul className='middle'>

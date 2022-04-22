@@ -37,6 +37,10 @@ const StyledWrapper = styled.div`
 const StepButton: React.FC<PropTypes> = ({ initialValue = 1, onChange }) => {
   const [value, setValue] = useState(initialValue);
 
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
   const onIncrease = () => {
     setValue(value + 1);
     if (onChange) {

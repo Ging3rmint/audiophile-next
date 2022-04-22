@@ -22,6 +22,10 @@ const StyledList = styled.li`
   margin-top: 32px;
   position: relative;
 
+  &:first-child {
+    margin-top: 10px;
+  }
+
   &:hover {
     .delete {
       display: block;

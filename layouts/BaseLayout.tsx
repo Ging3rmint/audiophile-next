@@ -40,7 +40,7 @@ const BaseLayout: React.FC<PropTypes> = ({
       </Head>
       <Header pathName={pathName} darkMode={dark} />
       {children}
-      <Footer />
+      <Footer pathName={pathName} />
     </div>
   );
 };
