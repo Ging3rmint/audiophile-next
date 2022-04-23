@@ -279,7 +279,7 @@ export default ProductDetailPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/${query.category}/${query.slug}`
+    `${process.env.NEXT_PUBLIC_URL}/api/products/${query.category}/${query.slug}`
   );
 
   if (!data) {
