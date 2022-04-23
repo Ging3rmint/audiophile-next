@@ -3,7 +3,7 @@ import type {
   NextPage,
   InferGetServerSidePropsType,
 } from "next";
-import Router, { useRouter } from "next/router";
+import { NEXT_URL } from "@/config/index";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -106,7 +106,7 @@ export default ProductPage;
 export const getServerSideProps: GetServerSideProps = async ({
   query: { category },
 }) => {
-  const { data } = await axios.get(`${process.env.APP_URL}/api/${category}`);
+  const { data } = await axios.get(`${NEXT_URL}/api/${category}`);
 
   if (data && !data.length) {
     return {

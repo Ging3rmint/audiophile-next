@@ -18,7 +18,8 @@
     "paths": {
       "@/components/*": ["components/*"],
       "@/constants/*": ["constants/*"],
-      "@/icomoon/*": ["icomoon/*"]
+      "@/icomoon/*": ["icomoon/*"],
+      "@/config/*": ["config/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

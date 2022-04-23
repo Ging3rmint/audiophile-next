@@ -9,7 +9,7 @@ import styled from "styled-components";
 import { colors } from "@/constants/colors";
 import { useAppDispatch } from "hooks";
 import { addCartItem } from "redux/cart";
-
+import { NEXT_URL } from "@/config/index";
 import BaseLayout from "layouts/BaseLayout";
 
 import ProductCTA from "@/components/organisms/ProductCTA";
@@ -247,7 +247,7 @@ export default ProductDetailPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { data } = await axios.get(
-    `${process.env.APP_URL}/api/${query.category}/${query.slug}`
+    `${NEXT_URL}/api/${query.category}/${query.slug}`
   );
 
   if (!data) {
