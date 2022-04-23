@@ -1,6 +1,5 @@
-// import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { InferGetServerSidePropsType, GetServerSideProps } from "next";
-// import { ParsedUrlQuery } from "querystring";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { ParsedUrlQuery } from "querystring";
 
 import Link from "next/link";
 import axios from "axios";
@@ -72,7 +71,7 @@ const ProductDetailPage = ({
   category,
   slug,
   data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const addToCart = (quantity: number) => {
@@ -239,56 +238,56 @@ const ProductDetailPage = ({
 
 export default ProductDetailPage;
 
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const { data } = await axios.get(
-//     `${process.env.NEXT_PUBLIC_URL}/api/products`
-//   );
-
-//   const paths = data.map((product: any) => {
-//     return { params: { category: product.category, slug: product.slug } };
-//   });
-
-//   return { paths, fallback: false };
-// };
-
-// interface StaticPropTypes {
-//   category: string;
-//   slug: string;
-//   data: any;
-// }
-
-// interface IParams extends ParsedUrlQuery {
-//   category: string;
-//   slug: string;
-// }
-
-// export const getStaticProps: GetStaticProps<StaticPropTypes> = async (
-//   context
-// ) => {
-//   const { category, slug } = context.params as IParams;
-
-//   const { data } = await axios.get(
-//     `${process.env.NEXT_PUBLIC_URL}/api/products/${category}/${slug}`
-//   );
-
-//   return {
-//     props: { category, slug, data },
-//     revalidate: 1,
-//   };
-// };
-
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/products/${query.category}/${query.slug}`
+    `${process.env.NEXT_PUBLIC_URL}/api/products`
   );
 
-  if (!data) {
-    return {
-      notFound: true,
-    };
-  }
+  const paths = data.map((product: any) => {
+    return { params: { category: product.category, slug: product.slug } };
+  });
+
+  return { paths, fallback: false };
+};
+
+interface StaticPropTypes {
+  category: string;
+  slug: string;
+  data: any;
+}
+
+interface IParams extends ParsedUrlQuery {
+  category: string;
+  slug: string;
+}
+
+export const getStaticProps: GetStaticProps<StaticPropTypes> = async (
+  context
+) => {
+  const { category, slug } = context.params as IParams;
+
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_URL}/api/products/${category}/${slug}`
+  );
 
   return {
-    props: { category: query.category, slug: query.slug, data },
+    props: { category, slug, data },
+    revalidate: 1,
   };
 };
+
+// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+//   const { data } = await axios.get(
+//     `${process.env.NEXT_PUBLIC_URL}/api/${query.category}/${query.slug}`
+//   );
+
+//   if (!data) {
+//     return {
+//       notFound: true,
+//     };
+//   }
+
+//   return {
+//     props: { category: query.category, slug: query.slug, data },
+//   };
+// };
