@@ -1,9 +1,10 @@
-import type {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-} from "next";
-import { ParsedUrlQuery } from "querystring";
+// import type {
+//   GetStaticPaths,
+//   GetStaticProps,
+//   InferGetStaticPropsType,
+// } from "next";
+// import { ParsedUrlQuery } from "querystring";
+import { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -22,7 +23,7 @@ const StyledPage = styled.section`
 const ProductPage = ({
   category,
   productData,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <BaseLayout title='audiophile | product' pathName={`/${category}`}>
       <StyledPage>
@@ -103,55 +104,55 @@ const ProductPage = ({
 
 export default ProductPage;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/products`
-  );
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const { data } = await axios.get(
+//     `${process.env.NEXT_PUBLIC_URL}/api/products`
+//   );
 
-  const paths = data.map((product: any) => {
-    return { params: { category: product.category } };
-  });
+//   const paths = data.map((product: any) => {
+//     return { params: { category: product.category } };
+//   });
 
-  return { paths, fallback: false };
-};
+//   return { paths, fallback: false };
+// };
 
-interface StaticPropTypes {
-  category: string;
-  productData: any;
-}
+// interface StaticPropTypes {
+//   category: string;
+//   productData: any;
+// }
 
-interface IParams extends ParsedUrlQuery {
-  category: string;
-}
+// interface IParams extends ParsedUrlQuery {
+//   category: string;
+// }
 
-export const getStaticProps: GetStaticProps<StaticPropTypes> = async (
-  context
-) => {
-  const { category } = context.params as IParams;
+// export const getStaticProps: GetStaticProps<StaticPropTypes> = async (
+//   context
+// ) => {
+//   const { category } = context.params as IParams;
 
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/products/${category}`
-  );
-
-  return {
-    props: { category, productData: data },
-  };
-};
-
-// export const getServerSideProps: GetServerSideProps = async ({
-//   query: { category },
-// }) => {
 //   const { data } = await axios.get(
 //     `${process.env.NEXT_PUBLIC_URL}/api/products/${category}`
 //   );
-
-//   if (data && !data.length) {
-//     return {
-//       notFound: true,
-//     };
-//   }
 
 //   return {
 //     props: { category, productData: data },
 //   };
 // };
+
+export const getServerSideProps: GetServerSideProps = async ({
+  query: { category },
+}) => {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_URL}/api/products/${category}`
+  );
+
+  if (data && !data.length) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: { category, productData: data },
+  };
+};
