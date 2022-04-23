@@ -80,7 +80,7 @@ const StyledHeader = styled.header`
     }
   }
 
-  ul:not(.middle) {
+  ul:not(.cart-listing) {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -148,49 +148,6 @@ const StyledModalContent = styled.div`
       opacity: 0.5;
       font-size: 15px;
       cursor: pointer;
-    }
-  }
-
-  .middle {
-    padding: 0 16px;
-    min-height: 100px;
-    max-height: 400px;
-    overflow-y: auto;
-    margin-bottom: 32px;
-    margin-top: 32px;
-
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-button {
-      width: 0px;
-      height: 0px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #e1e1e1;
-      border: 0px none #ffffff;
-      border-radius: 50px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #ffffff;
-    }
-    ::-webkit-scrollbar-thumb:active {
-      background: #000000;
-    }
-    ::-webkit-scrollbar-track {
-      background: #666666;
-      border: 0px none #ffffff;
-      border-radius: 50px;
-    }
-    ::-webkit-scrollbar-track:hover {
-      background: #666666;
-    }
-    ::-webkit-scrollbar-track:active {
-      background: #333333;
-    }
-    ::-webkit-scrollbar-corner {
-      background: transparent;
     }
   }
 
@@ -316,16 +273,21 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
                 <span>CART {`(${totalCartItem})`}</span>
                 <button onClick={onClearCart}>Remove all</button>
               </div>
-              <ul className='middle'>
+              <ul className='cart-listing'>
                 {cartItems.map((item: any, itemIdx: number) => {
-                  return <CartItem key={"cart" + itemIdx} {...item} />;
+                  return (
+                    <CartItem key={"cart" + itemIdx} {...item} isEdit={true} />
+                  );
                 })}
               </ul>
               <div className='bottom'>
                 <span>TOTAL</span>
                 <span>$ {totalCost.toLocaleString()}</span>
               </div>
-              <Button text='CHECKOUT' />
+              <Button
+                text='CHECKOUT'
+                onClick={() => router.push("/checkout")}
+              />
             </StyledModalContent>
           </Modal>
         </div>

@@ -14,6 +14,7 @@ interface PropTypes {
   category: string;
   slug: string;
   tag: string;
+  isEdit?: boolean;
 }
 
 const StyledList = styled.li`
@@ -52,6 +53,7 @@ const StyledList = styled.li`
   .content {
     margin-left: 16px;
     margin-right: auto;
+    min-width: 140px;
 
     span {
       &:first-of-type {
@@ -70,6 +72,13 @@ const StyledList = styled.li`
       min-width: 30px;
     }
   }
+
+  .qty-text {
+    color: ${colors.black};
+    opacity: 0.5;
+    font-weight: 700;
+    font-size: 15px;
+  }
 `;
 
 const CartItem: React.FC<PropTypes> = ({
@@ -80,6 +89,7 @@ const CartItem: React.FC<PropTypes> = ({
   category,
   slug,
   tag,
+  isEdit,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -95,15 +105,21 @@ const CartItem: React.FC<PropTypes> = ({
 
   return (
     <StyledList>
-      <button className='delete' onClick={onRemoveTargetItem}>
-        X
-      </button>
+      {isEdit && (
+        <button className='delete' onClick={onRemoveTargetItem}>
+          X
+        </button>
+      )}
       <Image width={64} height={64} src={image} alt={name} />
       <div className='content'>
         <span>{tag}</span>
         <span>$ {price.toLocaleString()}</span>
       </div>
-      <StepButton initialValue={quantity} onChange={onQuantityChange} />
+      {isEdit ? (
+        <StepButton initialValue={quantity} onChange={onQuantityChange} />
+      ) : (
+        <span className='qty-text'>x{quantity}</span>
+      )}
     </StyledList>
   );
 };

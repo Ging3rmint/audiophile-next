@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { colors } from "@/constants/colors";
 import { useAppDispatch } from "hooks";
 import { addCartItem } from "redux/cart";
+import { useRouter } from "next/router";
 import BaseLayout from "layouts/BaseLayout";
 
 import ProductCTA from "@/components/organisms/ProductCTA";
@@ -16,13 +17,6 @@ import About from "@/components/organisms/About";
 
 const StyledPage = styled.section`
   padding-top: 176px;
-
-  .container > a {
-    margin-bottom: 56px;
-    display: inline-block;
-    color: ${colors.black};
-    opacity: 0.5;
-  }
 
   .features {
     display: flex;
@@ -79,7 +73,7 @@ const ProductDetailPage = ({
   data,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const dispatch = useAppDispatch();
-
+  const router = useRouter();
   const addToCart = (quantity: number) => {
     const {
       name,
@@ -111,7 +105,9 @@ const ProductDetailPage = ({
     >
       <StyledPage>
         <section className='container'>
-          <Link href={`/${category}`}>Go Back</Link>
+          <button className='button-back' onClick={() => router.back()}>
+            Go Back
+          </button>
           <ProductCTA
             image={data.image.desktop}
             imageHeight={560}

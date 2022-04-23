@@ -1,9 +1,10 @@
+import { memo } from "react";
 import { colors } from "@/constants/colors";
 import styled from "styled-components";
 
 interface PropTypes {
   value?: string;
-  onChange?: () => void;
+  onChange?: (value: string) => void;
   name?: string;
   id?: string;
   label?: string;
@@ -72,17 +73,16 @@ const RadioField: React.FC<PropTypes> = ({
   label,
 }) => {
   return (
-    <StyledWrapper>
+    <StyledWrapper className='radio-field'>
       <input
         id={id}
         name={name}
         type='radio'
-        value={value}
-        onChange={onChange}
+        onClick={() => onChange && value && onChange(value)}
       />
       <label htmlFor={id}>{label}</label>
     </StyledWrapper>
   );
 };
 
-export default RadioField;
+export default memo(RadioField);

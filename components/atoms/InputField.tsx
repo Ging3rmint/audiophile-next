@@ -1,15 +1,17 @@
+import { memo } from "react";
 import styled from "styled-components";
 
 import { colors } from "@/constants/index";
 
 interface PropTypes {
-  onChange?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   label?: string;
   value?: string;
   name?: string;
   id?: string;
   error?: string;
+  type?: string;
 }
 
 const StyledWrapper = styled.div`
@@ -59,6 +61,7 @@ const StyledWrapper = styled.div`
     border: 1px solid #cfcfcf;
     border-radius: 8px;
     caret-color: #cfcfcf;
+    width: 100%;
 
     &::placeholder {
       color: rgba(0, 0, 0, 0.4);
@@ -79,14 +82,16 @@ const InputField: React.FC<PropTypes> = ({
   value,
   error,
   onChange,
+  type = "text",
 }) => {
   return (
-    <StyledWrapper className={error ? "error" : ""}>
+    <StyledWrapper className={`input-field ${error ? "error" : ""}`}>
       <div className='label-wrapper'>
         <label htmlFor={id}>{label}</label>
         {error && <span>{error}</span>}
       </div>
       <input
+        type={type}
         id={id}
         name={name}
         placeholder={placeholder}
@@ -97,4 +102,4 @@ const InputField: React.FC<PropTypes> = ({
   );
 };
 
-export default InputField;
+export default memo(InputField);
