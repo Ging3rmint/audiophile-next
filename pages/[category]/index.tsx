@@ -106,7 +106,7 @@ export default ProductPage;
 export const getServerSideProps: GetServerSideProps = async ({
   query: { category },
 }) => {
-  const { data } = await axios.get(`http://localhost:3000/api/${category}`);
+  const { data } = await axios.get(`${process.env.APP_URL}/api/${category}`);
 
   if (data && !data.length) {
     return {
