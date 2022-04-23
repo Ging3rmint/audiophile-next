@@ -1,9 +1,9 @@
 import type {
-  GetServerSideProps,
-  NextPage,
-  InferGetServerSidePropsType,
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
 } from "next";
-import { NEXT_URL } from "@/config/index";
+import { ParsedUrlQuery } from "querystring";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -19,10 +19,10 @@ const StyledPage = styled.section`
   }
 `;
 
-const ProductPage: NextPage = ({
+const ProductPage = ({
   category,
   productData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <BaseLayout title='audiophile | product' pathName={`/${category}`}>
       <StyledPage>
@@ -103,18 +103,55 @@ const ProductPage: NextPage = ({
 
 export default ProductPage;
 
-export const getServerSideProps: GetServerSideProps = async ({
-  query: { category },
-}) => {
-  const { data } = await axios.get(`${NEXT_URL}/api/${category}`);
+export const getStaticPaths: GetStaticPaths = async () => {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_URL}/api/products`
+  );
 
-  if (data && !data.length) {
-    return {
-      notFound: true,
-    };
-  }
+  const paths = data.map((product: any) => {
+    return { params: { category: product.category } };
+  });
+
+  return { paths, fallback: false };
+};
+
+interface StaticPropTypes {
+  category: string;
+  productData: any;
+}
+
+interface IParams extends ParsedUrlQuery {
+  category: string;
+}
+
+export const getStaticProps: GetStaticProps<StaticPropTypes> = async (
+  context
+) => {
+  const { category } = context.params as IParams;
+
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_URL}/api/products/${category}`
+  );
 
   return {
     props: { category, productData: data },
   };
 };
+
+// export const getServerSideProps: GetServerSideProps = async ({
+//   query: { category },
+// }) => {
+//   const { data } = await axios.get(
+//     `${process.env.NEXT_PUBLIC_URL}/api/products/${category}`
+//   );
+
+//   if (data && !data.length) {
+//     return {
+//       notFound: true,
+//     };
+//   }
+
+//   return {
+//     props: { category, productData: data },
+//   };
+// };
