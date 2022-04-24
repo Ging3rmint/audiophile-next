@@ -6,7 +6,7 @@ import { colors } from "@/constants/colors";
 import { useAppDispatch } from "hooks";
 import { addCartItem } from "redux/cart";
 import { useRouter } from "next/router";
-import { products } from "./data";
+import { products } from "../api/products/data";
 import BaseLayout from "layouts/BaseLayout";
 
 import ProductCTA from "@/components/organisms/ProductCTA";

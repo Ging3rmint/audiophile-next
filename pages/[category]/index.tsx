@@ -6,7 +6,7 @@ import type {
 import { ParsedUrlQuery } from "querystring";
 import styled from "styled-components";
 import axios from "axios";
-import { products } from "./data";
+import { products } from "../api/products/data";
 
 import BaseLayout from "layouts/BaseLayout";
 import Banner from "@/components/organisms/Banner";
