@@ -255,6 +255,10 @@ const CheckoutPage: NextPage = () => {
   };
 
   const onFormValueChange = (name: string, value: string) => {
+    if (name === "paymentMode") {
+      setFormErrors({ ...formErrors, eMoneyNumber: "", eMoneyPin: "" });
+    }
+    setFormErrors({ ...formErrors, [name]: "" });
     setFormValues({ ...formValues, [name]: value });
   };
 
