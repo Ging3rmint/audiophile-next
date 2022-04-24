@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styled from "styled-components";
+import { breakpoints } from "@/constants/index";
 
 interface PropTypes {
   images: {
@@ -16,6 +17,10 @@ const StyledGallery = styled.section`
   display: flex;
   justify-content: space-between;
 
+  @media (max-width: ${breakpoints.bpLgMobile}px) {
+    display: block;
+  }
+
   img {
     border-radius: 8px;
   }
@@ -23,6 +28,20 @@ const StyledGallery = styled.section`
   .left {
     display: flex;
     flex-direction: column;
+
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      padding-right: 18px;
+    }
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      padding-right: 0;
+    }
+
+    .sub-gallery {
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        margin-bottom: 20px;
+      }
+    }
 
     .sub-gallery:last-of-type {
       margin-top: auto;
@@ -37,6 +56,9 @@ const Gallery: React.FC<PropTypes> = ({ images, style }) => {
         {images[0] && (
           <figure className='sub-gallery'>
             <Image
+              layout='responsive'
+              sizes='100%'
+              objectFit='cover'
               src={images[0].url}
               alt={images[0].alt}
               height={images[0].height}

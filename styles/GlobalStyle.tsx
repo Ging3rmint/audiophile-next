@@ -33,6 +33,7 @@ export const GlobalStyle = createGlobalStyle`
 
     img{
         display: block;
+        max-width: 100%;
     }
 
     ul{
@@ -54,7 +55,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     .cart-listing {
-      padding: 0 16px;
+      padding: 0;
       min-height: 100px;
       max-height: 400px;
       overflow-y: auto;

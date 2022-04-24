@@ -1,4 +1,6 @@
-import { colors } from "@/constants/colors";
+import { useState, useEffect } from "react";
+import { useWindowDimensions } from "hooks";
+import { colors, breakpoints } from "@/constants/index";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -12,6 +14,10 @@ const StyledFooter = styled.footer`
   background-color: ${colors.black};
   padding: 71px 0 58px;
 
+  @media (max-width: ${breakpoints.bpTablet}px) {
+    padding: 52px 0 38px;
+  }
+
   .container {
     position: relative;
 
@@ -24,6 +30,10 @@ const StyledFooter = styled.footer`
       top: -70px;
       left: 20px;
       z-index: 2;
+
+      @media (max-width: ${breakpoints.bpTablet}px) {
+        top: -50px;
+      }
     }
   }
 
@@ -32,16 +42,37 @@ const StyledFooter = styled.footer`
     justify-content: space-between;
     align-items: center;
 
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      display: block;
+    }
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      text-align: center;
+    }
+
     h2 {
       color: ${colors.white};
       font-size: 28px;
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        margin-bottom: 32px;
+      }
     }
 
     ul {
       display: flex;
 
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        display: block;
+      }
+
       li {
         margin-right: 34px;
+
+        @media (max-width: ${breakpoints.bpLgMobile}px) {
+          margin-right: 0;
+          margin-bottom: 16px;
+        }
 
         position: relative;
 
@@ -82,12 +113,24 @@ const StyledFooter = styled.footer`
     margin-top: 36px;
     display: flex;
 
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      display: block;
+    }
+
     p {
       color: ${colors.white};
       opacity: 0.5;
       font-size: 15px;
       font-weight: 500;
+      line-height: 25px;
       width: 50%;
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        width: 100%;
+      }
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        text-align: center;
+      }
     }
 
     &__social-media {
@@ -103,16 +146,53 @@ const StyledFooter = styled.footer`
   }
 
   .bottom {
-    color: ${colors.white};
-    opacity: 0.5;
     margin-top: 56px;
-    font-size: 15px;
-    font-weight: 700;
+
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      display: block;
+      text-align: center;
+
+      .middle__social-media {
+        justify-content: center;
+        margin-top: 48px;
+
+        > a {
+          margin-right: 16px;
+        }
+      }
+    }
+
+    span {
+      display: inline-block;
+      color: ${colors.white};
+      opacity: 0.5;
+      font-size: 15px;
+      font-weight: 700;
+    }
   }
 `;
 
 const Footer: React.FC<PropTypes> = ({ pathName }) => {
   const router = useRouter();
+
+  const windowDimensions = useWindowDimensions();
+  const [viewMode, setViewMode] = useState("desktop");
+
+  useEffect(() => {
+    if (windowDimensions && windowDimensions.width) {
+      if (windowDimensions.width < breakpoints.bpDesktop) {
+        setViewMode("tablet");
+      } else {
+        setViewMode("desktop");
+      }
+    }
+  }, [windowDimensions]);
 
   return (
     <StyledFooter>
@@ -170,25 +250,48 @@ const Footer: React.FC<PropTypes> = ({ pathName }) => {
             are devoted to helping you get the most out of personal audio. Come
             and visit our demo facility - we&apos;re open 7 days a week.
           </p>
-          <div className='middle__social-media'>
-            <Link href='/'>
-              <a>
-                <Icon name='facebook' size={20} color={colors.white} />
-              </a>
-            </Link>
-            <Link href='/'>
-              <a>
-                <Icon name='twitter' size={20} color={colors.white} />
-              </a>
-            </Link>
-            <Link href='/'>
-              <a>
-                <Icon name='instagram' size={20} color={colors.white} />
-              </a>
-            </Link>
-          </div>
+          {viewMode === "desktop" && (
+            <div className='middle__social-media'>
+              <Link href='/'>
+                <a>
+                  <Icon name='facebook' size={20} color={colors.white} />
+                </a>
+              </Link>
+              <Link href='/'>
+                <a>
+                  <Icon name='twitter' size={20} color={colors.white} />
+                </a>
+              </Link>
+              <Link href='/'>
+                <a>
+                  <Icon name='instagram' size={20} color={colors.white} />
+                </a>
+              </Link>
+            </div>
+          )}
         </div>
-        <div className='bottom'>Copyright 2021. All Rights Reserved</div>
+        <div className='bottom'>
+          <span>Copyright 2021. All Rights Reserved</span>
+          {viewMode != "desktop" && (
+            <div className='middle__social-media'>
+              <Link href='/'>
+                <a>
+                  <Icon name='facebook' size={20} color={colors.white} />
+                </a>
+              </Link>
+              <Link href='/'>
+                <a>
+                  <Icon name='twitter' size={20} color={colors.white} />
+                </a>
+              </Link>
+              <Link href='/'>
+                <a>
+                  <Icon name='instagram' size={20} color={colors.white} />
+                </a>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </StyledFooter>
   );

@@ -1,4 +1,7 @@
+import { useState } from "react";
+import { breakpoints } from "@/constants/breakpoints";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import styled from "styled-components";
 import Button from "../atoms/Button";
 
@@ -14,9 +17,23 @@ interface PropTypes {
 const StyledBanner = styled.section`
   border-radius: 8px;
   background-size: cover;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .image {
+    width: 100%;
+  }
 
   .content {
-    padding: 101px 95px;
+    position: absolute;
+    top: 50%;
+    left: 62px;
+    transform: translate(0, -50%);
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      left: 24px;
+    }
 
     h2 {
       margin-bottom: 32px;
@@ -36,14 +53,33 @@ const ProductBannerLeft: React.FC<PropTypes> = ({
 }) => {
   const router = useRouter();
 
+  const [imageDimension, setImageDimension] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  const onLoadImage = (imageSize: {
+    naturalWidth: number;
+    naturalHeight: number;
+  }) => {
+    setImageDimension({
+      width: imageSize.naturalWidth,
+      height: imageSize.naturalHeight,
+    });
+  };
+
   return (
-    <StyledBanner
-      style={{
-        ...style,
-        backgroundImage: `url('${image}')`,
-        backgroundRepeat: "no-repeat, repeat",
-      }}
-    >
+    <StyledBanner style={style}>
+      <div className='image'>
+        <Image
+          src={image}
+          alt='banner image'
+          width={imageDimension.width}
+          height={imageDimension.height}
+          layout='responsive'
+          onLoadingComplete={onLoadImage}
+        />
+      </div>
       <div className='content'>
         <h2>{title}</h2>
         <Button

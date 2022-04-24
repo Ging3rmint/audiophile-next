@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { colors } from "@/constants/colors";
+import { useRef, useState } from "react";
+import { colors, breakpoints } from "@/constants/index";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -10,8 +10,6 @@ import StepButton from "../atoms/StepButton";
 interface PropTypes {
   id?: string;
   image: string;
-  imageHeight: number;
-  imageWidth: number;
   imageAlt: string;
   isNew?: boolean;
   title: string;
@@ -28,11 +26,40 @@ interface PropTypes {
 const StyledWrapper = styled.section`
   display: flex;
 
+  &:not(.cost) {
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      display: block;
+    }
+
+    .image {
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        background-color: ${colors.lightGray};
+        border-radius: 8px;
+
+        > * {
+          width: 50%;
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        > * {
+          width: 100%;
+        }
+      }
+    }
+  }
+
   &.reverse {
     flex-direction: row-reverse;
+
     .content {
       padding-left: 0;
       padding-right: 125px;
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        padding: 0;
+      }
     }
   }
 
@@ -50,6 +77,18 @@ const StyledWrapper = styled.section`
     padding: 109px 0;
     padding-left: 125px;
 
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      padding: 0;
+      margin: 52px auto 0;
+      text-align: center;
+      width: 70%;
+    }
+
+    @media (max-width: ${breakpoints.bpTablet}px) {
+      margin-top: 32px;
+      width: 100%;
+    }
+
     .new {
       display: block;
       margin-bottom: 16px;
@@ -66,6 +105,19 @@ const StyledWrapper = styled.section`
       letter-spacing: 1.5;
       margin-bottom: 32px;
       text-transform: uppercase;
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        width: 50%;
+        margin: 0 auto 32px;
+      }
+
+      @media (max-width: ${breakpoints.bpTablet}px) {
+        width: 70%;
+        font-size: 28px;
+        line-height: 38px;
+        letter-spacing: 1;
+        margin-bottom: 24px;
+      }
     }
 
     p {
@@ -75,6 +127,10 @@ const StyledWrapper = styled.section`
       opacity: 0.5;
       color: ${colors.black};
       margin-bottom: 40px;
+
+      @media (max-width: ${breakpoints.bpTablet}px) {
+        margin-bottom: 24px;
+      }
     }
 
     .price {
@@ -91,12 +147,35 @@ const StyledWrapper = styled.section`
       }
     }
   }
+
+  &.cost {
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      display: block;
+    }
+
+    .content {
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        padding-left: 69px;
+        text-align: left;
+        margin: auto 0;
+      }
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        padding-left: 0;
+        margin: 30px 0 0;
+      }
+
+      h2 {
+        @media (max-width: ${breakpoints.bpDesktop}px) {
+          width: 100%;
+        }
+      }
+    }
+  }
 `;
 
 const ProductCTA: React.FC<PropTypes> = ({
   image,
-  imageHeight,
-  imageWidth,
   imageAlt,
   title,
   isNew,
@@ -109,6 +188,21 @@ const ProductCTA: React.FC<PropTypes> = ({
 }) => {
   const router = useRouter();
   const quantity = useRef(1);
+
+  const [imageDimension, setImageDimension] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  const onLoadImage = (imageSize: {
+    naturalWidth: number;
+    naturalHeight: number;
+  }) => {
+    setImageDimension({
+      width: imageSize.naturalWidth,
+      height: imageSize.naturalHeight,
+    });
+  };
 
   const onQuantityChange = (qty: number) => {
     quantity.current = qty;
@@ -129,15 +223,22 @@ const ProductCTA: React.FC<PropTypes> = ({
   return (
     <StyledWrapper
       style={style}
-      className={direction === "reverse" ? "reverse" : ""}
+      className={`${direction === "reverse" ? "reverse" : ""} ${
+        cost ? "cost" : ""
+      }`}
     >
       <figure className='image'>
-        <Image
-          src={image}
-          alt={imageAlt}
-          width={imageWidth}
-          height={imageHeight}
-        />
+        <div>
+          <Image
+            objectFit='contain'
+            layout='responsive'
+            onLoadingComplete={onLoadImage}
+            src={image}
+            alt={imageAlt}
+            width={imageDimension.width}
+            height={imageDimension.height}
+          />
+        </div>
       </figure>
       <div className='content'>
         {isNew && <span className='new'>NEW PRODUCT</span>}

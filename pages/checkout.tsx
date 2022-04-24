@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useAppSelector } from "hooks";
 import { selectCartItems } from "redux/cart";
 import styled from "styled-components";
-import { colors } from "../constants";
+import { colors, breakpoints } from "../constants";
 import { validateEmail } from "utils/validation";
 import BaseLayout from "layouts/BaseLayout";
 
@@ -36,6 +36,19 @@ const StyledPage = styled.section`
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      display: block;
+
+      > * {
+        &:first-of-type {
+          max-width: 100%;
+          margin: 0;
+          margin-bottom: 32px;
+          width: 100%;
+        }
+      }
+    }
   }
 `;
 
@@ -48,6 +61,15 @@ const StyledModalContent = styled.div`
   padding: 48px;
   border-radius: 8px;
 
+  @media (max-width: ${breakpoints.bpDesktop}px) {
+    width: 60%;
+  }
+
+  @media (max-width: ${breakpoints.bpLgMobile}px) {
+    width: 90%;
+    padding: 32px;
+  }
+
   .checkmark-icon {
     font-size: 32px;
     color: ${colors.white};
@@ -56,6 +78,10 @@ const StyledModalContent = styled.div`
     border-radius: 100%;
     display: inline-block;
     margin-bottom: 33px;
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      margin-bottom: 23px;
+    }
   }
 
   h2 {
@@ -66,6 +92,12 @@ const StyledModalContent = styled.div`
     line-height: 36px;
     color: ${colors.black};
     margin-bottom: 24px;
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      width: 100%;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
   }
 
   p {
@@ -74,6 +106,10 @@ const StyledModalContent = styled.div`
     font-size: 15px;
     font-weight: 500;
     margin-bottom: 33px;
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      margin-bottom: 23px;
+    }
   }
 
   .item-card {
@@ -82,10 +118,19 @@ const StyledModalContent = styled.div`
     overflow: hidden;
     margin-bottom: 46px;
 
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      display: block;
+      margin-bottom: 23px;
+    }
+
     &__left {
       width: 55%;
       background-color: ${colors.lightGray};
       padding: 24px;
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        width: 100%;
+      }
 
       .other {
         margin-top: 12px;
@@ -105,6 +150,11 @@ const StyledModalContent = styled.div`
       background-color: ${colors.black};
       padding: 41px 32px;
       color: ${colors.white};
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        width: 100%;
+        padding: 15px 24px;
+      }
 
       > span {
         display: block;

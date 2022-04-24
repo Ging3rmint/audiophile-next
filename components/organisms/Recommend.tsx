@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { breakpoints } from "@/constants/breakpoints";
 import ProductCard from "@/components/molecules/ProductCard";
 import ProductLink from "@/components/molecules/ProductLink";
 
@@ -28,6 +29,24 @@ const StyledSection = styled.section`
   .cards-wrapper {
     display: flex;
     justify-content: space-between;
+
+    > * {
+      flex: 1 1 100%;
+    }
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      display: block;
+      text-align: center;
+
+      > * {
+        width: 100%;
+        margin-top: 16px;
+
+        &:first-of-type {
+          margin-top: 0;
+        }
+      }
+    }
   }
 `;
 

@@ -1,11 +1,14 @@
-import { useEffect, useState, useRef } from "react";
-import { colors } from "@/constants/colors";
+import { useEffect, useState } from "react";
+import { colors, breakpoints } from "@/constants/index";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { selectCartItems, clearCart } from "redux/cart";
+import { useWindowDimensions } from "../../hooks";
 
 import styled from "styled-components";
+
+import HamburgerButton from "../atoms/HamburgerButton";
 import Icon from "../atoms/Icon";
 import Button from "../atoms/Button";
 import Modal from "../molecules/Modal";
@@ -37,6 +40,10 @@ const StyledHeader = styled.header`
     position: relative;
     align-items: center;
 
+    @media (max-width: ${breakpoints.bpTablet}px) {
+      justify-content: space-between;
+    }
+
     &:before {
       content: "";
       height: 1px;
@@ -50,16 +57,48 @@ const StyledHeader = styled.header`
 
     nav {
       flex: 1 1 100%;
+
+      &.mobileTablet {
+        opacity: 0;
+        position: fixed;
+        background-color: black;
+        top: 114px;
+        padding: 20px;
+        bottom: 0;
+        left: 0;
+        transform: translate(-100%, 0);
+        transition: transform 0.3s ease-in-out;
+
+        &.active {
+          opacity: 1;
+          transform: translate(0, 0);
+        }
+        > ul {
+          display: block;
+
+          li {
+            margin-bottom: 20px;
+          }
+        }
+      }
     }
   }
 
   .logo h1 {
     color: ${colors.white};
     font-size: 32px;
+
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      margin-left: 42px;
+    }
   }
 
   .cart {
     position: relative;
+
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      margin-left: auto;
+    }
 
     .qty-cart {
       position: absolute;
@@ -126,9 +165,15 @@ const StyledModalContent = styled.div`
   background-color: ${colors.white};
   position: absolute;
   top: 30px;
-  right: 0;
+  right: 20px;
   padding: 33px;
   border-radius: 8px;
+
+  @media (max-width: ${breakpoints.bpLgMobile}px) {
+    right: 50%;
+    width: 90%;
+    transform: translate(50%, 0);
+  }
 
   .top {
     display: flex;
@@ -181,6 +226,7 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
   const [totalCost, setTotalCost] = useState(0);
   const [totalCartItem, setTotalCartItem] = useState(0);
   const cartItems = useAppSelector(selectCartItems);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => {
     let initialValue = 0;
@@ -197,6 +243,24 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
     setTotalCartItem(total);
   }, [cartItems]);
 
+  const windowDimensions = useWindowDimensions();
+  const [viewMode, setViewMode] = useState("desktop");
+
+  useEffect(() => {
+    if (windowDimensions && windowDimensions.width) {
+      if (
+        windowDimensions.width < breakpoints.bpDesktop &&
+        windowDimensions.width > breakpoints.bpLgMobile
+      ) {
+        setViewMode("tablet");
+      } else if (windowDimensions.width < breakpoints.bpTablet) {
+        setViewMode("mobile");
+      } else {
+        setViewMode("desktop");
+      }
+    }
+  }, [windowDimensions]);
+
   const onCartClick = () => {
     setShowCart(!showCart);
   };
@@ -209,6 +273,9 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
   return (
     <StyledHeader className={darkMode ? "dark" : "dark"}>
       <div className='container'>
+        {viewMode !== "desktop" && (
+          <HamburgerButton onClick={() => setShowMobileMenu(!showMobileMenu)} />
+        )}
         <div className='logo'>
           <Link href='/'>
             <a>
@@ -216,7 +283,13 @@ const Header: React.FC<PropTypes> = ({ pathName, darkMode }) => {
             </a>
           </Link>
         </div>
-        <nav>
+        <nav
+          className={
+            viewMode !== "desktop"
+              ? `mobileTablet ${showMobileMenu && "active"}`
+              : ""
+          }
+        >
           <ul>
             <li
               className={

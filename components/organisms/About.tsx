@@ -1,12 +1,11 @@
+import { useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
-import { colors } from "@/constants/index";
+import { colors, breakpoints } from "@/constants/index";
 
 interface Proptypes {
   image: string;
   imageAlt: string;
-  imageHeight: number;
-  imageWidth: number;
   style?: {
     [propName: string]: any;
   };
@@ -16,7 +15,17 @@ const StyledWrapper = styled.section`
   display: flex;
   justify-content: space-between;
 
+  @media (max-width: ${breakpoints.bpDesktop}px) {
+    flex-direction: column-reverse;
+  }
+
   .image {
+    width: 50%;
+
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      width: 100%;
+    }
+
     img {
       border-radius: 8px;
     }
@@ -25,6 +34,12 @@ const StyledWrapper = styled.section`
   .content {
     width: 50%;
     padding: 123px 56px 0 0;
+
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      width: 100%;
+      padding-right: 0;
+      padding-top: 63px;
+    }
 
     h2 {
       width: 90%;
@@ -37,6 +52,19 @@ const StyledWrapper = styled.section`
       span {
         color: ${colors.darkPeach};
       }
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        width: 70%;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        width: 80%;
+        font-size: 28px;
+        line-height: 38px;
+        letter-spacing: 1px;
+      }
     }
 
     p {
@@ -45,17 +73,37 @@ const StyledWrapper = styled.section`
       font-weight: 500;
       font-size: 15px;
       line-height: 25px;
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 32px;
+        text-align: center;
+      }
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        width: 90%;
+      }
     }
   }
 `;
 
-const About: React.FC<Proptypes> = ({
-  image,
-  imageAlt,
-  imageHeight,
-  imageWidth,
-  style,
-}) => {
+const About: React.FC<Proptypes> = ({ image, imageAlt, style }) => {
+  const [imageDimension, setImageDimension] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  const onLoadImage = (imageSize: {
+    naturalWidth: number;
+    naturalHeight: number;
+  }) => {
+    setImageDimension({
+      width: imageSize.naturalWidth,
+      height: imageSize.naturalHeight,
+    });
+  };
+
   return (
     <StyledWrapper style={style}>
       <div className='content'>
@@ -73,10 +121,14 @@ const About: React.FC<Proptypes> = ({
       </div>
       <div className='image'>
         <Image
+          objectFit='contain'
+          layout='responsive'
+          sizes='100%'
           src={image}
           alt={imageAlt}
-          height={imageHeight}
-          width={imageWidth}
+          onLoadingComplete={onLoadImage}
+          width={imageDimension.width}
+          height={imageDimension.height}
         />
       </div>
     </StyledWrapper>

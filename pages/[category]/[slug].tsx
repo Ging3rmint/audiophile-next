@@ -1,8 +1,9 @@
+import { useState, useEffect } from "react";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
-import axios from "axios";
+import { useWindowDimensions } from "hooks";
 import styled from "styled-components";
-import { colors } from "@/constants/colors";
+import { colors, breakpoints } from "@/constants/index";
 import { useAppDispatch } from "hooks";
 import { addCartItem } from "redux/cart";
 import { useRouter } from "next/router";
@@ -22,6 +23,15 @@ const StyledPage = styled.section`
     justify-content: space-between;
     margin-bottom: 160px;
 
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      display: block;
+      margin-top: 120px;
+    }
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      margin: 88px 0;
+    }
+
     h2 {
       margin-bottom: 32px;
       font-size: 32px;
@@ -30,6 +40,10 @@ const StyledPage = styled.section`
 
     .left {
       width: 60%;
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        width: 100%;
+      }
 
       p {
         white-space: pre-line;
@@ -43,6 +57,20 @@ const StyledPage = styled.section`
     .right {
       width: 40%;
       padding-left: 125px;
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        width: 60%;
+        padding: 0;
+        margin-top: 120px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        width: 100%;
+        display: block;
+        margin-top: 88px;
+      }
 
       ul {
         li {
@@ -96,6 +124,24 @@ const ProductDetailPage = ({
     );
   };
 
+  const windowDimensions = useWindowDimensions();
+  const [viewMode, setViewMode] = useState("desktop");
+
+  useEffect(() => {
+    if (windowDimensions && windowDimensions.width) {
+      if (
+        windowDimensions.width < breakpoints.bpDesktop &&
+        windowDimensions.width > breakpoints.bpLgMobile
+      ) {
+        setViewMode("tablet");
+      } else if (windowDimensions.width < breakpoints.bpTablet) {
+        setViewMode("mobile");
+      } else {
+        setViewMode("desktop");
+      }
+    }
+  }, [windowDimensions]);
+
   return (
     <BaseLayout
       dark={true}
@@ -108,9 +154,7 @@ const ProductDetailPage = ({
             Go Back
           </button>
           <ProductCTA
-            image={data.image.desktop}
-            imageHeight={560}
-            imageWidth={540}
+            image={data.image[viewMode]}
             imageAlt={data.name}
             title={data.name}
             isNew={data.new}
@@ -140,19 +184,19 @@ const ProductDetailPage = ({
           <Gallery
             images={[
               {
-                url: data.gallery.first.desktop,
+                url: data.gallery.first[viewMode],
                 alt: "gallery image",
                 width: 445,
                 height: 280,
               },
               {
-                url: data.gallery.second.desktop,
+                url: data.gallery.second[viewMode],
                 alt: "gallery image",
                 width: 445,
                 height: 280,
               },
               {
-                url: data.gallery.third.desktop,
+                url: data.gallery.third[viewMode],
                 alt: "gallery image",
                 width: 635,
                 height: 592,
@@ -161,11 +205,13 @@ const ProductDetailPage = ({
           />
 
           <Recommend
-            style={{ marginTop: 160 }}
+            style={
+              viewMode === "mobile" ? { marginTop: 120 } : { marginTop: 160 }
+            }
             type='card'
             products={[
               {
-                image: data.others[0].image.desktop,
+                image: data.others[0].image[viewMode],
                 imageAlt: data.others[0].name,
                 imageWidth: 350,
                 imageHeight: 318,
@@ -173,7 +219,7 @@ const ProductDetailPage = ({
                 href: `/${data.others[0].category}/${data.others[0].slug}`,
               },
               {
-                image: data.others[1].image.desktop,
+                image: data.others[1].image[viewMode],
                 imageAlt: data.others[1].name,
                 imageWidth: 350,
                 imageHeight: 318,
@@ -181,7 +227,7 @@ const ProductDetailPage = ({
                 href: `/${data.others[1].category}/${data.others[1].slug}`,
               },
               {
-                image: data.others[2].image.desktop,
+                image: data.others[2].image[viewMode],
                 imageAlt: data.others[2].name,
                 imageWidth: 350,
                 imageHeight: 318,
@@ -191,7 +237,9 @@ const ProductDetailPage = ({
             ]}
           />
           <Recommend
-            style={{ marginTop: 160 }}
+            style={
+              viewMode === "mobile" ? { marginTop: 120 } : { marginTop: 160 }
+            }
             products={[
               {
                 title: "HEADPHONES",
@@ -223,10 +271,12 @@ const ProductDetailPage = ({
             ]}
           />
           <About
-            style={{ marginTop: 160, marginBottom: 160 }}
-            image='/images/shared/desktop/image-best-gear.jpg'
-            imageHeight={588}
-            imageWidth={540}
+            style={
+              viewMode === "mobile"
+                ? { marginTop: 120, marginBottom: 120 }
+                : { marginTop: 160, marginBottom: 160 }
+            }
+            image={`/images/shared/${viewMode}/image-best-gear.jpg`}
             imageAlt='Best gear'
           />
         </section>

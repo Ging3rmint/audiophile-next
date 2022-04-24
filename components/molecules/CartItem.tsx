@@ -2,9 +2,9 @@ import Image from "next/image";
 import styled from "styled-components";
 import { useAppDispatch } from "hooks";
 import { updateCart, removeCartItem } from "redux/cart";
+import { colors, breakpoints } from "@/constants/index";
 
 import StepButton from "@/components/atoms/StepButton";
-import { colors } from "@/constants/colors";
 
 interface PropTypes {
   image: string;
@@ -38,7 +38,7 @@ const StyledList = styled.li`
     color: ${colors.white};
     background-color: ${colors.black};
     top: -10px;
-    left: -10px;
+    left: 0px;
     z-index: 3;
     width: 25px;
     height: 25px;
@@ -61,6 +61,10 @@ const StyledList = styled.li`
         font-weight: 700;
       }
       display: block;
+    }
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      min-width: 100px;
     }
   }
 

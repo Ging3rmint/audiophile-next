@@ -1,6 +1,6 @@
 import { memo } from "react";
 import styled from "styled-components";
-import { colors } from "@/constants/index";
+import { colors, breakpoints } from "@/constants/index";
 
 import RadioField from "../atoms/RadioField";
 import InputField from "../atoms/InputField";
@@ -74,12 +74,21 @@ const StyledForm = styled.form`
     justify-content: space-between;
     margin-top: 16px;
 
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      display: block;
+    }
+
     .input-field {
       width: 49%;
       margin-bottom: 24px;
 
       &:last-of-type {
         display: block;
+      }
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        display: block;
+        width: 100%;
       }
     }
 
@@ -98,6 +107,11 @@ const StyledForm = styled.form`
         display: block;
         margin-left: auto;
         margin-top: 16px;
+
+        @media (max-width: ${breakpoints.bpLgMobile}px) {
+          display: block;
+          width: 100%;
+        }
       }
     }
   }

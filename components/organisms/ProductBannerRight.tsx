@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { colors } from "@/constants/colors";
+import { colors, breakpoints } from "@/constants/index";
 import Button from "../atoms/Button";
 
 interface PropTypes {
@@ -28,7 +28,19 @@ const StyledBanner = styled.section`
   .image {
     position: absolute;
     left: 128px;
-    bottom: -10px;
+    bottom: -5px;
+    width: 32%;
+
+    @media (max-width: ${breakpoints.bpTablet}px) {
+      top: 52px;
+      left: 50%;
+      width: 20%;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      width: 50%;
+    }
   }
 
   .content {
@@ -38,6 +50,19 @@ const StyledBanner = styled.section`
     width: 35%;
     padding: 133px 0;
 
+    @media (max-width: ${breakpoints.bpTablet}px) {
+      padding: 353px 0 64px;
+      width: 45%;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    @media (max-width: ${breakpoints.bpLgMobile}px) {
+      margin-top: 32px;
+      padding: 294px 0 64px;
+      width: 70%;
+    }
+
     h2 {
       color: ${colors.white};
       font-size: 56px;
@@ -45,6 +70,17 @@ const StyledBanner = styled.section`
       line-height: 58px;
       font-weight: 700;
       margin-bottom: 24px;
+      width: 80%;
+
+      @media (max-width: ${breakpoints.bpTablet}px) {
+        margin: 0 auto 24px;
+      }
+
+      @media (max-width: ${breakpoints.bpLgMobile}px) {
+        font-size: 36px;
+        letter-spacing: 1.3;
+        line-height: 40px;
+      }
     }
 
     p {
@@ -55,6 +91,10 @@ const StyledBanner = styled.section`
       font-size: 15px;
       width: 90%;
       margin-bottom: 40px;
+
+      @media (max-width: ${breakpoints.bpTablet}px) {
+        margin: 0 auto 40px;
+      }
     }
   }
 `;
@@ -76,11 +116,12 @@ const ProductBannerRight: React.FC<PropTypes> = ({
       <div className='image'>
         <Image
           src={image}
-          alt={imageAlt}
-          height={imageHeight}
           width={imageWidth}
+          height={imageHeight}
+          alt={imageAlt}
         />
       </div>
+
       <div className='content'>
         <h2>{title}</h2>
         <p>{description}</p>

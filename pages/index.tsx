@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
+import { breakpoints } from "../constants";
+import { useWindowDimensions } from "hooks";
 import styled from "styled-components";
 
 import BaseLayout from "layouts/BaseLayout";
@@ -11,12 +14,30 @@ import ProductBanner from "@/components/organisms/ProductBanner";
 import About from "@/components/organisms/About";
 
 const StyledPage = styled.section`
-  .container {
-    padding: 0;
-  }
+  // .container {
+  //   padding: 0 10px;
+  // }
 `;
 
 const HomePage: NextPage = () => {
+  const windowDimensions = useWindowDimensions();
+  const [viewMode, setViewMode] = useState("desktop");
+
+  useEffect(() => {
+    if (windowDimensions && windowDimensions.width) {
+      if (
+        windowDimensions.width < breakpoints.bpDesktop &&
+        windowDimensions.width > breakpoints.bpLgMobile
+      ) {
+        setViewMode("tablet");
+      } else if (windowDimensions.width < breakpoints.bpTablet) {
+        setViewMode("mobile");
+      } else {
+        setViewMode("desktop");
+      }
+    }
+  }, [windowDimensions]);
+
   return (
     <BaseLayout>
       <StyledPage>
@@ -24,13 +45,18 @@ const HomePage: NextPage = () => {
           title='XX99 Mark II
         Headphones'
           description='Experience natural, lifelike audio and exceptional build quality made for the passionate music enthusiast.'
-          image='./images/home/desktop/image-hero.jpg'
-          height={729}
+          image={`./images/home/${viewMode}/image-hero.jpg`}
           href='/headphones/xx99-mark-two-headphones'
         />
         <section className='container'>
           <Recommend
-            style={{ marginTop: 120 }}
+            style={
+              viewMode === "desktop"
+                ? { marginTop: 120 }
+                : viewMode === "tablet"
+                ? { marginTop: 96 }
+                : { marginTop: 40 }
+            }
             products={[
               {
                 title: "HEADPHONES",
@@ -56,13 +82,19 @@ const HomePage: NextPage = () => {
                 image:
                   "/images/shared/desktop/image-category-thumbnail-earphones.png",
                 imageWidth: 228,
-                imageHeight: 224,
+                imageHeight: 200,
                 imageAlt: "earphone",
               },
             ]}
           />
           <ProductBannerRight
-            style={{ marginTop: 168 }}
+            style={
+              viewMode === "desktop"
+                ? { marginTop: 168 }
+                : viewMode === "tablet"
+                ? { marginTop: 96 }
+                : { marginTop: 120 }
+            }
             title='ZX9 SPEAKER'
             description='Upgrade to premium speakers that are phenomenally built to deliver truly remarkable sound.'
             href='/speakers/zx9-speaker'
@@ -73,27 +105,41 @@ const HomePage: NextPage = () => {
           />
 
           <ProductBannerLeft
-            style={{ marginTop: 48 }}
+            style={
+              viewMode === "desktop"
+                ? { marginTop: 48 }
+                : viewMode === "tablet"
+                ? { marginTop: 32 }
+                : { marginTop: 24 }
+            }
             title='ZX7 SPEAKER'
             href='/speakers/zx7-speaker'
-            image='/images/home/desktop/image-speaker-zx7.jpg'
+            image={`/images/home/${viewMode}/image-speaker-zx7.jpg`}
           />
 
           <ProductBanner
-            style={{ marginTop: 48 }}
+            style={
+              viewMode === "desktop"
+                ? { marginTop: 48 }
+                : viewMode === "tablet"
+                ? { marginTop: 32 }
+                : { marginTop: 24 }
+            }
             title='YX1 EARPHONES'
             href='/earphones/yx1-earphones'
-            image='/images/home/desktop/image-earphones-yx1.jpg'
-            imageHeight={320}
-            imageWidth={540}
+            image={`/images/home/${viewMode}/image-earphones-yx1.jpg`}
             imageAlt='yx1-earphones'
           />
 
           <About
-            style={{ marginTop: 200, marginBottom: 200 }}
-            image='/images/shared/desktop/image-best-gear.jpg'
-            imageHeight={588}
-            imageWidth={540}
+            style={
+              viewMode === "desktop"
+                ? { marginTop: 200, marginBottom: 200 }
+                : viewMode === "tablet"
+                ? { marginTop: 96, marginBottom: 96 }
+                : { marginTop: 120, marginBottom: 120 }
+            }
+            image={`/images/shared/${viewMode}/image-best-gear.jpg`}
             imageAlt='Best gear'
           />
         </section>

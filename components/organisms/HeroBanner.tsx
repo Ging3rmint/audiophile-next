@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import styled from "styled-components";
-import { colors } from "@/constants/colors";
+import { colors, breakpoints } from "@/constants/index";
 import Button from "../atoms/Button";
 
 interface PropTypes {
@@ -8,19 +10,25 @@ interface PropTypes {
   description: string;
   href: string;
   title: string;
-  height: number;
   style?: {
     [propName: string]: any;
   };
 }
 
 const StyledBanner = styled.section`
-  margin: 0 auto;
-  background-position: center;
+  position: relative;
+
+  .image {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
 
   .container {
-    position: relative;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
     .content {
       position: absolute;
@@ -28,6 +36,12 @@ const StyledBanner = styled.section`
       left: 20px;
       transform: translate(0, -50%);
       width: 400px;
+
+      @media (max-width: ${breakpoints.bpDesktop}px) {
+        left: 50% !important;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
 
       > span {
         font-weight: 400;
@@ -42,7 +56,13 @@ const StyledBanner = styled.section`
         font-size: 56px;
         line-height: 58px;
         letter-spacing: 2px;
+        text-transform: uppercase;
         color: ${colors.white};
+
+        @media (max-width: ${breakpoints.bpTablet}px) {
+          font-size: 36px;
+          line-height: 40px;
+        }
       }
 
       > p {
@@ -53,6 +73,10 @@ const StyledBanner = styled.section`
         line-height: 25px;
         width: 90%;
         margin-bottom: 40px;
+
+        @media (max-width: ${breakpoints.bpTablet}px) {
+          margin: 0 auto 40px;
+        }
       }
     }
   }
@@ -63,7 +87,6 @@ const HeroBanner: React.FC<PropTypes> = ({
   description,
   href,
   image,
-  height,
   style,
 }) => {
   const router = useRouter();
@@ -72,15 +95,35 @@ const HeroBanner: React.FC<PropTypes> = ({
     router.push(href);
   };
 
+  const [imageDimension, setImageDimension] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  const onLoadImage = (imageSize: {
+    naturalWidth: number;
+    naturalHeight: number;
+  }) => {
+    setImageDimension({
+      width: imageSize.naturalWidth,
+      height: imageSize.naturalHeight,
+    });
+  };
+
   return (
-    <StyledBanner
-      style={{
-        ...style,
-        backgroundImage: `url('${image}')`,
-        backgroundRepeat: "no-repeat, repeat",
-        height: height,
-      }}
-    >
+    <StyledBanner style={style}>
+      <div className='image'>
+        <Image
+          objectFit='contain'
+          sizes='100%'
+          layout='responsive'
+          src={"/" + image}
+          width={imageDimension.width}
+          height={imageDimension.height}
+          onLoadingComplete={onLoadImage}
+        />
+      </div>
+
       <div className='container'>
         <div className='content'>
           <span>NEW PRODUCT</span>

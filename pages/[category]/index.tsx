@@ -4,8 +4,11 @@ import type {
   InferGetStaticPropsType,
 } from "next";
 import { ParsedUrlQuery } from "querystring";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
+// import axios from "axios";
+import { breakpoints } from "@/constants/breakpoints";
+import { useWindowDimensions } from "hooks";
 import { products } from "../api/products/data";
 
 import BaseLayout from "layouts/BaseLayout";
@@ -14,16 +17,30 @@ import ProductCTA from "@/components/organisms/ProductCTA";
 import Recommend from "@/components/organisms/Recommend";
 import About from "@/components/organisms/About";
 
-const StyledPage = styled.section`
-  .container {
-    padding: 0;
-  }
-`;
+const StyledPage = styled.section``;
 
 const ProductPage = ({
   category,
   productData,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const windowDimensions = useWindowDimensions();
+  const [viewMode, setViewMode] = useState("desktop");
+
+  useEffect(() => {
+    if (windowDimensions && windowDimensions.width) {
+      if (
+        windowDimensions.width < breakpoints.bpDesktop &&
+        windowDimensions.width > breakpoints.bpLgMobile
+      ) {
+        setViewMode("tablet");
+      } else if (windowDimensions.width < breakpoints.bpTablet) {
+        setViewMode("mobile");
+      } else {
+        setViewMode("desktop");
+      }
+    }
+  }, [windowDimensions]);
+
   return (
     <BaseLayout title='audiophile | product' pathName={`/${category}`}>
       <StyledPage>
@@ -44,10 +61,14 @@ const ProductPage = ({
                 return (
                   <ProductCTA
                     key={product.slug}
-                    style={{ marginTop: 160 }}
+                    style={
+                      viewMode === "desktop"
+                        ? { marginTop: 160 }
+                        : viewMode === "tablet"
+                        ? { marginTop: 120 }
+                        : { marginTop: productIdx === 0 ? 64 : 120 }
+                    }
                     image={product.image.desktop}
-                    imageHeight={560}
-                    imageWidth={540}
                     imageAlt={product.name}
                     title={product.name}
                     isNew={product.new}
@@ -58,7 +79,9 @@ const ProductPage = ({
                 );
               })}
           <Recommend
-            style={{ marginTop: 160 }}
+            style={
+              viewMode === "desktop" ? { marginTop: 160 } : { marginTop: 120 }
+            }
             products={[
               {
                 title: "HEADPHONES",
@@ -90,10 +113,12 @@ const ProductPage = ({
             ]}
           />
           <About
-            style={{ marginTop: 160, marginBottom: 160 }}
-            image='/images/shared/desktop/image-best-gear.jpg'
-            imageHeight={588}
-            imageWidth={540}
+            style={
+              viewMode === "desktop"
+                ? { marginTop: 160, marginBottom: 160 }
+                : { marginTop: 120, marginBottom: 120 }
+            }
+            image={`/images/shared/${viewMode}/image-best-gear.jpg`}
             imageAlt='Best gear'
           />
         </section>

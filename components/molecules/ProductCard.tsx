@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-
+import { breakpoints, colors } from "@/constants/index";
 import Button from "@/components/atoms/Button";
 
 interface PropType {
@@ -15,8 +15,18 @@ interface PropType {
 
 const StyledCard = styled.div`
   display: inline-block;
-  img {
-    border-radius: 8px;
+  padding: 10px;
+
+  .image {
+    @media (max-width: ${breakpoints.bpDesktop}px) {
+      background-color: ${colors.lightGray};
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    img {
+      border-radius: 8px;
+    }
   }
 
   .content {
@@ -46,12 +56,17 @@ const ProductCard: React.FC<PropType> = ({
   return (
     <StyledCard>
       <figure className='image'>
-        <Image
-          src={image}
-          alt={imageAlt}
-          width={imageWidth}
-          height={imageHeight}
-        />
+        <div>
+          <Image
+            layout='responsive'
+            sizes='100%'
+            objectFit='contain'
+            src={image}
+            alt={imageAlt}
+            width={imageWidth}
+            height={imageHeight}
+          />
+        </div>
       </figure>
       <div className='content'>
         <span>{title}</span>
