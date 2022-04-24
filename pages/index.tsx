@@ -26,7 +26,7 @@ const HomePage: NextPage = () => {
           description='Experience natural, lifelike audio and exceptional build quality made for the passionate music enthusiast.'
           image='./images/home/desktop/image-hero.jpg'
           height={729}
-          href='/'
+          href='/headphones/xx99-mark-two-headphones'
         />
         <section className='container'>
           <Recommend
@@ -34,7 +34,7 @@ const HomePage: NextPage = () => {
             products={[
               {
                 title: "HEADPHONES",
-                href: "/",
+                href: "/headphones",
                 image:
                   "/images/shared/desktop/image-category-thumbnail-headphones.png",
                 imageWidth: 228,
@@ -42,22 +42,22 @@ const HomePage: NextPage = () => {
                 imageAlt: "headphone",
               },
               {
-                title: "HEADPHONES",
-                href: "/",
+                title: "SPEAKERS",
+                href: "/speakers",
                 image:
-                  "/images/shared/desktop/image-category-thumbnail-headphones.png",
+                  "/images/shared/desktop/image-category-thumbnail-speakers.png",
                 imageWidth: 228,
                 imageHeight: 224,
-                imageAlt: "headphone",
+                imageAlt: "speaker",
               },
               {
-                title: "HEADPHONES",
-                href: "/",
+                title: "EARPHONES",
+                href: "/earphones",
                 image:
-                  "/images/shared/desktop/image-category-thumbnail-headphones.png",
+                  "/images/shared/desktop/image-category-thumbnail-earphones.png",
                 imageWidth: 228,
                 imageHeight: 224,
-                imageAlt: "headphone",
+                imageAlt: "earphone",
               },
             ]}
           />
@@ -65,7 +65,7 @@ const HomePage: NextPage = () => {
             style={{ marginTop: 168 }}
             title='ZX9 SPEAKER'
             description='Upgrade to premium speakers that are phenomenally built to deliver truly remarkable sound.'
-            href='/'
+            href='/speakers/zx9-speaker'
             image='/images/home/desktop/image-speaker-zx9.png'
             imageHeight={504}
             imageWidth={394}
@@ -74,19 +74,19 @@ const HomePage: NextPage = () => {
 
           <ProductBannerLeft
             style={{ marginTop: 48 }}
-            title='ZX9 SPEAKER'
-            href='/'
+            title='ZX7 SPEAKER'
+            href='/speakers/zx7-speaker'
             image='/images/home/desktop/image-speaker-zx7.jpg'
           />
 
           <ProductBanner
             style={{ marginTop: 48 }}
             title='YX1 EARPHONES'
-            href='/'
+            href='/earphones/yx1-earphones'
             image='/images/home/desktop/image-earphones-yx1.jpg'
             imageHeight={320}
             imageWidth={540}
-            imageAlt='ZX9 Speaker'
+            imageAlt='yx1-earphones'
           />
 
           <About

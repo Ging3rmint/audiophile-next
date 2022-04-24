@@ -18,6 +18,18 @@ interface FormValueTypes {
     eMoneyNumber: string;
     eMoneyPin: string;
   };
+  formErrors: {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    zipCode: string;
+    city: string;
+    country: string;
+    paymentMode: string;
+    eMoneyNumber: string;
+    eMoneyPin: string;
+  };
   onChange: (key: string, value: string) => void;
 }
 
@@ -25,6 +37,7 @@ const StyledForm = styled.form`
   background-color: ${colors.white};
   padding: 57px 48px;
   border-radius: 8px;
+  max-width: 68%;
 
   section > span {
     font-size: 12px;
@@ -90,7 +103,11 @@ const StyledForm = styled.form`
   }
 `;
 
-const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
+const CheckoutForm: React.FC<FormValueTypes> = ({
+  formValues,
+  formErrors,
+  onChange,
+}) => {
   const onFormValueChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     key: string
@@ -106,6 +123,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
         <h2>Billing Details</h2>
         <div className='input-wrapper'>
           <InputField
+            error={formErrors.name}
             name='name'
             label='Name'
             id='name'
@@ -114,6 +132,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
             onChange={(e) => onFormValueChange(e, "name")}
           />
           <InputField
+            error={formErrors.email}
             name='email'
             label='Email Address'
             id='email'
@@ -123,6 +142,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
             onChange={(e) => onFormValueChange(e, "email")}
           />
           <InputField
+            error={formErrors.phoneNumber}
             name='phoneNumber'
             label='Phone Number'
             id='phoneNumber'
@@ -136,6 +156,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
         <h2>Shipping Info</h2>
         <div className='input-wrapper--full'>
           <InputField
+            error={formErrors.address}
             name='address'
             label='Address'
             id='address'
@@ -146,6 +167,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
         </div>
         <div className='input-wrapper'>
           <InputField
+            error={formErrors.zipCode}
             name='zipCode'
             label='Zip Code / Postal Code'
             id='zipCode'
@@ -154,6 +176,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
             onChange={(e) => onFormValueChange(e, "zipCode")}
           />
           <InputField
+            error={formErrors.city}
             name='city'
             label='City'
             id='city'
@@ -162,6 +185,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
             onChange={(e) => onFormValueChange(e, "city")}
           />
           <InputField
+            error={formErrors.country}
             name='country'
             label='Country'
             id='country'
@@ -176,6 +200,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
         <span>Payment Method</span>
         <div className='input-wrapper--align-right'>
           <RadioField
+            defaultChecked={true}
             name='paymentMode'
             label='e-Money'
             id='eMoney'
@@ -192,6 +217,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
         </div>
         <div className='input-wrapper'>
           <InputField
+            error={formErrors.eMoneyNumber}
             name='eMoneyNumber'
             label='e-Money Number'
             id='eMoneyNumber'
@@ -200,6 +226,7 @@ const CheckoutForm: React.FC<FormValueTypes> = ({ formValues, onChange }) => {
             onChange={(e) => onFormValueChange(e, "eMoneyNumber")}
           />
           <InputField
+            error={formErrors.eMoneyPin}
             name='eMoneyPin'
             label='e-Money Pin'
             id='eMoneyPin'

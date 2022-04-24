@@ -8,6 +8,7 @@ interface PropTypes {
   name?: string;
   id?: string;
   label?: string;
+  defaultChecked?: boolean;
 }
 
 const StyledWrapper = styled.div`
@@ -66,6 +67,7 @@ const StyledWrapper = styled.div`
   }
 `;
 const RadioField: React.FC<PropTypes> = ({
+  defaultChecked,
   value,
   onChange,
   name,
@@ -75,6 +77,7 @@ const RadioField: React.FC<PropTypes> = ({
   return (
     <StyledWrapper className='radio-field'>
       <input
+        defaultChecked={defaultChecked}
         id={id}
         name={name}
         type='radio'

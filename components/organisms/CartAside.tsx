@@ -2,8 +2,9 @@ import { memo } from "react";
 
 import styled from "styled-components";
 import { colors } from "@/constants/colors";
-import CartItem from "../molecules/CartItem";
+
 import Button from "../atoms/Button";
+import CartItem from "../molecules/CartItem";
 
 interface PropTypes {
   cartItems: {
@@ -19,6 +20,7 @@ interface PropTypes {
     total: number;
     gst: number;
   };
+  onClick?: () => void;
 }
 
 const StyledAside = styled.aside`
@@ -66,7 +68,7 @@ const StyledAside = styled.aside`
   }
 `;
 
-const CartAside: React.FC<PropTypes> = ({ cartItems, costs }) => {
+const CartAside: React.FC<PropTypes> = ({ cartItems, costs, onClick }) => {
   return (
     <StyledAside className='cart-aside'>
       <h1>summary</h1>
@@ -93,7 +95,11 @@ const CartAside: React.FC<PropTypes> = ({ cartItems, costs }) => {
           <span>$ {(costs.gst + costs.total).toLocaleString()}</span>
         </div>
       </div>
-      <Button text='CONTINUE &#38; PAY' className='cart-button' />
+      <Button
+        text='CONTINUE &#38; PAY'
+        className='cart-button'
+        onClick={onClick}
+      />
     </StyledAside>
   );
 };
