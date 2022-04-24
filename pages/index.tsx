@@ -45,7 +45,7 @@ const HomePage: NextPage = () => {
           title='XX99 Mark II
         Headphones'
           description='Experience natural, lifelike audio and exceptional build quality made for the passionate music enthusiast.'
-          image={`./images/home/${viewMode}/image-hero.jpg`}
+          image={`/images/home/${viewMode}/image-hero.jpg`}
           href='/headphones/xx99-mark-two-headphones'
         />
         <section className='container'>
