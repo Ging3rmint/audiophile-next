@@ -1,13 +1,12 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
-
-import Link from "next/link";
 import axios from "axios";
 import styled from "styled-components";
 import { colors } from "@/constants/colors";
 import { useAppDispatch } from "hooks";
 import { addCartItem } from "redux/cart";
 import { useRouter } from "next/router";
+import { products } from "./data";
 import BaseLayout from "layouts/BaseLayout";
 
 import ProductCTA from "@/components/organisms/ProductCTA";
@@ -239,11 +238,11 @@ const ProductDetailPage = ({
 export default ProductDetailPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/products`
-  );
+  // const { data } = await axios.get(
+  //   `${process.env.NEXT_PUBLIC_URL}/api/products`
+  // );
 
-  const paths = data.map((product: any) => {
+  const paths = products.map((product: any) => {
     return { params: { category: product.category, slug: product.slug } };
   });
 
@@ -266,9 +265,13 @@ export const getStaticProps: GetStaticProps<StaticPropTypes> = async (
 ) => {
   const { category, slug } = context.params as IParams;
 
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/products/${category}/${slug}`
-  );
+  // const { data } = await axios.get(
+  //   `${process.env.NEXT_PUBLIC_URL}/api/products/${category}/${slug}`
+  // );
+
+  const data = products.find((product) => {
+    return product.category === category && product.slug === slug;
+  });
 
   return {
     props: { category, slug, data },

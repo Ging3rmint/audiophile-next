@@ -6,6 +6,7 @@ import type {
 import { ParsedUrlQuery } from "querystring";
 import styled from "styled-components";
 import axios from "axios";
+import { products } from "./data";
 
 import BaseLayout from "layouts/BaseLayout";
 import Banner from "@/components/organisms/Banner";
@@ -104,11 +105,12 @@ const ProductPage = ({
 export default ProductPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/products`
-  );
+  //this causes error when building since localhost is not available. server needs to be up during build time
+  // const { data } = await axios.get(
+  //   `${process.env.NEXT_PUBLIC_URL}/api/products`
+  // );
 
-  const paths = data.map((product: any) => {
+  const paths = products.map((product: any) => {
     return { params: { category: product.category } };
   });
 
@@ -129,12 +131,17 @@ export const getStaticProps: GetStaticProps<StaticPropTypes> = async (
 ) => {
   const { category } = context.params as IParams;
 
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/products/${category}`
-  );
+  //this causes error when building since localhost is not available. server needs to be up during build time
+  // const { data } = await axios.get(
+  //   `${process.env.NEXT_PUBLIC_URL}/api/products/${category}`
+  // );
+
+  const productData = products.filter((product) => {
+    return product.category === category;
+  });
 
   return {
-    props: { category, productData: data },
+    props: { category, productData: productData },
   };
 };
 
