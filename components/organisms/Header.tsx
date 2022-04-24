@@ -170,7 +170,7 @@ const StyledModalContent = styled.div`
   }
 
   > button {
-    width: 313px;
+    width: 100%;
   }
 `;
 
