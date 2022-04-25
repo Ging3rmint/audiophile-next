@@ -20,7 +20,7 @@ interface PropTypes {
     total: number;
     gst: number;
   };
-  onClick?: () => void;
+  onClick?: (e?: React.FormEvent) => void;
 }
 
 const StyledAside = styled.aside`

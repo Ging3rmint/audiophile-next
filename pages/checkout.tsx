@@ -1,7 +1,13 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useLayoutEffect,
+} from "react";
 import { useRouter } from "next/router";
-import { useAppSelector } from "hooks";
+import { useAppSelector, useForm } from "hooks";
 import { selectCartItems } from "redux/cart";
 import styled from "styled-components";
 import { colors, breakpoints } from "../constants";
@@ -175,8 +181,13 @@ const StyledModalContent = styled.div`
   .product-card {
     display: flex;
 
+    .image {
+      width: 60px;
+      height: 60px;
+    }
+
     &__content {
-      margin-left: 16px;
+      // margin-left: 16px;
 
       span {
         display: block;
@@ -208,116 +219,109 @@ const StyledModalContent = styled.div`
   }
 `;
 
+const GST = 0.09;
+
+const computeTotalCost = (cartItems: any[]) => {
+  let initialValue = 0;
+
+  return cartItems.reduce((accumulator, item) => {
+    return accumulator + item.quantity * item.price;
+  }, initialValue);
+};
+
 const CheckoutPage: NextPage = () => {
+  const [isShowModal, setShowModal] = useState(false);
+  const [formData, handleChange, handleSubmit, formErrors] = useForm({
+    initialValue: {
+      name: "",
+      email: "",
+      phoneNumber: "",
+      address: "",
+      zipCode: "",
+      city: "",
+      country: "",
+      paymentMode: "e-Money",
+      eMoneyNumber: "",
+      eMoneyPin: "",
+    },
+    onSubmit: () => setShowModal(true),
+    validations: {
+      name: {
+        required: {
+          value: true,
+          message: "Field cannot be empty",
+        },
+      },
+      email: {
+        required: {
+          value: true,
+          message: "Field cannot be empty",
+        },
+        pattern: {
+          value: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,
+          message: "Invalid email address",
+        },
+      },
+      phoneNumber: {
+        required: {
+          value: true,
+          message: "Field cannot be empty",
+        },
+      },
+      address: {
+        required: {
+          value: true,
+          message: "Field cannot be empty",
+        },
+      },
+      zipCode: {
+        required: {
+          value: true,
+          message: "Field cannot be empty",
+        },
+      },
+      city: {
+        required: {
+          value: true,
+          message: "Field cannot be empty",
+        },
+      },
+      country: {
+        required: {
+          value: true,
+          message: "Field cannot be empty",
+        },
+      },
+      eMoneyNumber: {
+        dependent: {
+          key: "paymentMode",
+          isValid: (dependentValue: string, value: string) => {
+            return dependentValue !== "e-Money" || value.length;
+          },
+          message: "Field cannot be empty",
+        },
+      },
+      eMoneyPin: {
+        dependent: {
+          key: "paymentMode",
+          isValid: (dependentValue: string, value: string) => {
+            return dependentValue !== "e-Money" || value.length;
+          },
+          message: "Field cannot be empty",
+        },
+      },
+    },
+  });
+
   const router = useRouter();
   const cartItems = useAppSelector(selectCartItems);
-  const [isShowModal, setShowModal] = useState(false);
+  const sum = useMemo<number>(() => computeTotalCost(cartItems), [cartItems]);
 
-  const [costs, setCosts] = useState({
-    total: 0,
-    gst: 0,
-  });
-
-  const [formValues, setFormValues] = useState({
-    name: "",
-    email: "",
-    phoneNumber: "",
-    address: "",
-    zipCode: "",
-    city: "",
-    country: "",
-    paymentMode: "e-Money",
-    eMoneyNumber: "",
-    eMoneyPin: "",
-  });
-
-  const [formErrors, setFormErrors] = useState({
-    name: "",
-    email: "",
-    phoneNumber: "",
-    address: "",
-    zipCode: "",
-    city: "",
-    country: "",
-    paymentMode: "e-Money",
-    eMoneyNumber: "",
-    eMoneyPin: "",
-  });
-
-  useEffect(() => {
-    if (cartItems.length) {
-      let initialValue = 0;
-
-      const sum = cartItems.reduce((accumulator, item) => {
-        return accumulator + item.quantity * item.price;
-      }, initialValue);
-
-      const gst = sum * 0.09;
-
-      setCosts({
-        total: sum,
-        gst,
-      });
-    } else {
+  useLayoutEffect(() => {
+    if (!cartItems.length) {
       router.push("/");
     }
-  }, [cartItems]);
-
-  const formValidation = (formValues: FormValueTypes, callback: any) => {
-    let isValid = true;
-    const newFormErrors: FormValueTypes = { ...formErrors };
-
-    Object.keys(formValues).forEach((key, idx) => {
-      switch (key) {
-        case "email":
-          isValid = validateEmail(formValues[key]);
-          if (!isValid) {
-            newFormErrors[key] = "Invalid email address";
-          } else {
-            newFormErrors[key] = "";
-          }
-          break;
-        case "eMoneyNumber":
-        case "eMoneyPin":
-          if (formValues.paymentMode === "e-Money" && formValues[key] === "") {
-            newFormErrors[key] = "Field cannot be empty";
-            isValid = false;
-          } else {
-            newFormErrors[key] = "";
-          }
-          break;
-        default:
-          if (formValues[key] === "") {
-            newFormErrors[key] = "Field cannot be empty";
-            isValid = false;
-          } else {
-            newFormErrors[key] = "";
-          }
-          break;
-      }
-    });
-
-    if (isValid) {
-      callback();
-    } else {
-      setFormErrors(newFormErrors);
-    }
-  };
-
-  const onFormValueChange = (name: string, value: string) => {
-    if (name === "paymentMode") {
-      setFormErrors({ ...formErrors, eMoneyNumber: "", eMoneyPin: "" });
-    }
-    setFormErrors({ ...formErrors, [name]: "" });
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-  const onPaymentClick = () => {
-    console.log(formValues.paymentMode);
-    formValidation(formValues, () => {
-      setShowModal(true);
-    });
-  };
+  }, []);
 
   return (
     <BaseLayout>
@@ -328,14 +332,14 @@ const CheckoutPage: NextPage = () => {
           </button>
           <section className='form-wrapper'>
             <CheckoutForm
-              formValues={formValues}
+              formValues={formData}
               formErrors={formErrors}
-              onChange={onFormValueChange}
+              onChange={handleChange}
             />
             <CartAside
               cartItems={cartItems}
-              costs={costs}
-              onClick={onPaymentClick}
+              costs={{ total: sum, gst: sum * GST }}
+              onClick={handleSubmit}
             />
           </section>
         </section>
@@ -351,12 +355,17 @@ const CheckoutPage: NextPage = () => {
             <div className='item-card'>
               <div className='item-card__left'>
                 <div className='product-card'>
-                  <Image
-                    src={cartItems[0].image}
-                    width={50}
-                    height={50}
-                    alt='cart item'
-                  />
+                  <div className='image'>
+                    <Image
+                      objectFit='contain'
+                      layout='responsive'
+                      src={cartItems[0].image}
+                      width={50}
+                      height={50}
+                      alt='cart item'
+                    />
+                  </div>
+
                   <div className='product-card__content'>
                     <span>{cartItems[0].name}</span>
                     <span>$ {cartItems[0].price.toLocaleString()}</span>
@@ -375,7 +384,7 @@ const CheckoutPage: NextPage = () => {
               </div>
               <div className='item-card__right'>
                 <span>GRAND TOTAL</span>
-                <span>$ {(costs.total + costs.gst).toLocaleString()}</span>
+                <span>$ {(sum + GST * sum).toLocaleString()}</span>
               </div>
             </div>
             <Button
